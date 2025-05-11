@@ -1,4 +1,5 @@
-#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #define PATH_ELEMENT_H
 
 typedef struct string {
@@ -10,7 +11,7 @@ typedef struct string {
 typedef struct PathElement {
   char type[256];
 
-  string **id;
+  string *id;
   int id_count;
 
   string *class;
