@@ -25,3 +25,11 @@ PathElement *CreatePathElement(char *type, string id[], int id_count, string cla
 
   return element;
 }
+
+void FreePathElement(PathElement *element) {
+
+}
+
+void FreePathElementWithChildren(PathElement *element) {
+
+}

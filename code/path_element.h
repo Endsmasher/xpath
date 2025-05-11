@@ -23,3 +23,7 @@ typedef struct PathElement {
 } PathElement;
 
 PathElement *CreatePathElement(char *type, string id[], int id_count, string class[], int class_count, PathElement *parent);
+
+void FreePathElement(PathElement *element);
+
+void FreePathElementWithChildren(PathElement *element);
