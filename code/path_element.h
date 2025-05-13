@@ -1,28 +1,20 @@
-#include <stdlib.h>
-#include <string.h>
+#include <helper.h>
 #define PATH_ELEMENT_H
-
-typedef struct string {
-  char *str;
-
-} string;
-
 
 typedef struct PathElement {
   char type[256];
 
-  string *id;
+  String *id;
   int id_count;
 
-  string *class;
+  String *class;
   int class_count;
 
   struct PathElement **children;
   int children_count;
-
 } PathElement;
 
-PathElement *CreatePathElement(char *type, string id[], int id_count, string class[], int class_count, PathElement *parent);
+PathElement *CreatePathElement(char *type, String id[], int id_count, String class[], int class_count, PathElement *parent);
 
 void FreePathElement(PathElement *element);
 
