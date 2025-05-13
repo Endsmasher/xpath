@@ -66,12 +66,6 @@ StringArray *charToStrArr(char *args, String *delim) {
   return result;
 }
 
-void freeStr(String *str) {
-  if (str == NULL) return;
-
-  free(str->str);
-}
-
 void freeStringArray(StringArray *args) {
   if (args == NULL) return;
 
