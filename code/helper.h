@@ -1,7 +1,7 @@
 /*
  * Helper class to allocate String and other similar structs memory and free it again
  */
-
+#pragma once
 #include <stdlib.h>
 #include <string.h>
 #define HELPER_H
