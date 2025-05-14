@@ -19,4 +19,5 @@ PathElement *createPathElement(char *type, String id[], int id_count, String cla
 
 void freePathElements(PathElement *element);
 
+/* To use: printPathElements(firstElement, 0) */
 void printPathElements(PathElement *element, int level);
