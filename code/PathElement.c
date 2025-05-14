@@ -1,4 +1,5 @@
 #include <path_element.h>
+#include <stdio.h>
 
 PathElement *createPathElement(char *type, String id[], int id_count, String class[], int class_count, PathElement *parent) {
   PathElement *element = malloc(sizeof(PathElement));
@@ -27,7 +28,7 @@ PathElement *createPathElement(char *type, String id[], int id_count, String cla
 }
 
 void freePathElements(PathElement *element) {
-  if (element == NULL) return;
+  if (!element) return;
 
   for (int i = 0; i < element->id_count; i++) {
     free(element->id[i].str);
@@ -45,4 +46,42 @@ void freePathElements(PathElement *element) {
   free(element->children);
 
   free(element);
+}
+
+
+void printIndent(int level) {
+  for (int i = 0; i < level; i++) {
+    printf("  "); // 2 spaces x level
+  }
+}
+
+void printPathElements(PathElement *element, int level) {
+  if (!element) return;
+
+  printIndent(level);
+  printf("Type: %s\n", element->type);
+
+  if (element->id_count > 0) {
+    printIndent(level);
+    printf("IDs: ");
+    for (int i = 0; i < element->id_count; i++) {
+      printf("%s", element->id[i].str);
+      if (i < element->id_count - 1) printf(", ");
+    }
+    printf("\n");
+  }
+
+  if (element->class_count > 0) {
+    printIndent(level);
+    printf("Classes: ");
+    for (int i = 0; i < element->class_count; i++) {
+      printf("%s", element->class[i].str);
+      if (i < element->class_count - 1) printf(", ");
+    }
+    printf("\n");
+  }
+
+  for (int i = 0; i < element->children_count; i++) {
+    printPathElements(element->children[i], level + 1);
+  }
 }
