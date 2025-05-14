@@ -1,9 +1,8 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <path_element.h>
+//#include <helper.h>
 
-// ./Programm "../Pages/Seite.html div/div/div/price/id=223221/Auto"
+// ./Programm "C:\\Users\\herbi\\CLionProjects\\xpath\\html\\test.txt div/div/div/price/id=223221/Auto"
 
 
 void Programm(){
@@ -16,10 +15,18 @@ void Programm(){
     printf("File-Path: %s\n", file_path);
 
     //Die elemetent paths
+    //String *delim = charToStr(",");
     char *token = strtok(NULL, "/");
     while (token != NULL) {
+        int id;
         printf("Element-Pfad: %s\n", token);
-        token = strtok(NULL, "/");
+        if (sscanf(token, "id=%d", &id) == 1) {   // scant token, erwarte I,D,= und ließt eine zahl ( %d ) und speichert die in Id
+            printf("Element-Pfad id: %d\n", id);
+            token = strtok(NULL, "/");
+        }
+        else {
+            token = strtok(NULL, "/");
+        }
     }
 }
 int main() {
@@ -28,3 +35,10 @@ int main() {
 }
 
 
+//String *test = charToStr(eingabe);
+
+//String *delim = charToStr(",");
+
+//StringArray *test2 = charToStrArr(eingabe, delim);
+
+//PathElement *test3 = CreatePathElement("", test2->string, test2->count, NULL, 0, NULL);
