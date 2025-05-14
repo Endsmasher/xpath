@@ -1,6 +1,6 @@
 #include <path_element.h>
 
-PathElement *CreatePathElement(char *type, String id[], int id_count, String class[], int class_count, PathElement *parent) {
+PathElement *createPathElement(char *type, String id[], int id_count, String class[], int class_count, PathElement *parent) {
   PathElement *element = malloc(sizeof(PathElement));
 
   strcpy_s(element->type, sizeof(element->type) + 1, type);
@@ -26,10 +26,24 @@ PathElement *CreatePathElement(char *type, String id[], int id_count, String cla
   return element;
 }
 
-void FreePathElement(PathElement *element) {
+void freePathElements(PathElement *element) {
+  if (element == NULL) return;
 
-}
+  // Free IDs
+  for (int i = 0; i < element->id_count; i++) {
+    free(element->id[i].str);
+  }
+  free(element->id);
 
-void FreePathElementWithChildren(PathElement *element) {
+  for (int i = 0; i < element->class_count; i++) {
+    free(element->class[i].str);
+  }
+  free(element->class);
 
+  for (int i = 0; i < element->children_count; i++) {
+    freePathElements(element->children[i]);
+  }
+  free(element->children);
+
+  free(element);
 }

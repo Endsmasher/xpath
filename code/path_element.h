@@ -15,8 +15,6 @@ typedef struct PathElement {
   int children_count;
 } PathElement;
 
-PathElement *CreatePathElement(char *type, String id[], int id_count, String class[], int class_count, PathElement *parent);
+PathElement *createPathElement(char *type, String id[], int id_count, String class[], int class_count, PathElement *parent);
 
-void FreePathElement(PathElement *element);
-
-void FreePathElementWithChildren(PathElement *element);
+void freePathElements(PathElement *element);
