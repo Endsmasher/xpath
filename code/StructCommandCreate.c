@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
-//#include <helper.h>
-//#include <path_element.h>
+#include <helper.h>
+#include <path_element.h>
+#include <filepath_provider.h>
+
 
 // ./Programm "C:\\Users\\herbi\\CLionProjects\\xpath\\html\\test.txt div/div/div/price/id=223221/Auto"
 // absolute path nötig aktuell
@@ -20,9 +22,9 @@ void Programm(){
     //String *delim = charToStr(",");
     char *token = strtok(NULL, "/");
     while (token != NULL) {
-        int id;
+        char id[200];
         if (sscanf(token, "id=%d", &id) == 1) {   // scant token, erwarte I,D,= und ließt eine zahl ( %d ) und speichert die in Id
-            printf("Element-Pfad id: %d\n", id);
+            printf("Element-Pfad id: %s\n", id);
         }
         else {
             printf("Element-Pfad: %s\n", token);
