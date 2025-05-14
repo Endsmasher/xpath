@@ -29,7 +29,6 @@ PathElement *createPathElement(char *type, String id[], int id_count, String cla
 void freePathElements(PathElement *element) {
   if (element == NULL) return;
 
-  // Free IDs
   for (int i = 0; i < element->id_count; i++) {
     free(element->id[i].str);
   }
