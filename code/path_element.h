@@ -24,6 +24,10 @@ typedef struct PathElement {
  */
 PathElement *createPathElement(char *type, String id[], int id_count, String class[], int class_count, PathElement *parent);
 
+/*
+ * unassigning memory from PathElements
+ * all child elements of this element will be freed
+ */
 void freePathElements(PathElement *element);
 
 /* To use: printPathElements(firstElement, 0) */
