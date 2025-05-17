@@ -15,7 +15,10 @@ typedef struct StringArray {
   int count;
 
 } StringArray;
-/* Create new object StringArray */
+/* Create new object StringArray
+ * args to create from
+ * delim what to separate every string from each other
+ */
 StringArray *charToStrArr(char *args, String *delim);
 /* Create new string from char pointer */
 String *charToStr(char *s);
