@@ -1,7 +1,7 @@
 #include "path_element.h"
 #include <stdio.h>
 
-PathElement *createPathElement(char *type, String id[], int id_count, String class[], int class_count, PathElement *parent) {
+PathElement *createPathElement(const char *type, String id[], const int id_count, String class[], const int class_count, PathElement *parent) {
   PathElement *element = malloc(sizeof(PathElement));
 
   strcpy_s(element->type, sizeof(element->type) + 1, type);
@@ -55,7 +55,7 @@ void printIndent(int level) {
   }
 }
 
-void printPathElements(PathElement *element, int level) {
+void printPathElements(PathElement *element, const int level) {
   if (!element) return;
 
   printIndent(level);

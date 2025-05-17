@@ -38,7 +38,7 @@ StringArray *charToStrArr(char *args, String *delim) {
   result->string = NULL;
   result->count = 0;
 
-  char *token = strtok_s(args, delim->str, &context);
+  const char *token = strtok_s(args, delim->str, &context);
   int i = 0;
 
   while (token != NULL) {
