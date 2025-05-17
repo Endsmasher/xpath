@@ -10,4 +10,6 @@ add_executable(xpath
     code/helper.h
     code/path_element.h
     code/PathElement.c
-    code/StructCommandCreate.c)
+    code/path_element.c
+    code/StructCommandCreate.c
+)

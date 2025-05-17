@@ -22,17 +22,17 @@ String *charToStr(char *s) {
 }
 
 StringArray *charToStrArr(char *args, String *delim) {
-  if (args == NULL) return NULL;
+  if (args == NULL) return NULL;                            // wenn args / eingabe = nichts ist wird NULL ausgegeben
 
   char *args_copy = _strdup(args);
-  if (!args_copy) return NULL;
+  if (!args_copy) return NULL;                              //NULL wenn adresse args_copy kein string bekommen hat von args
 
   char *context = NULL;
-  StringArray *result = malloc(sizeof(StringArray));
+  StringArray *result = malloc(sizeof(StringArray));    //reserviert ein heap speicher adresse malloc....größe byte stringarray  in pointer result
 
-  if (!result) {
+  if (!result) { //result == NULL
     free(args_copy);
-    return NULL;
+    return NULL;      //bricht die funktion ab
   }
 
   result->string = NULL;
