@@ -37,8 +37,8 @@ void Programm(char *file_path, size_t len){
     for (int i = 1; i < token->count; i++) {
         if (token->string[i].str) {        // prüfung ob token überhaupt da ist
             if (strstr(token->string[i].str, "&") != NULL) {       // wenn ein token das symbol "&" enthält, dann soll token in der einzelne innertoken geteilt werden
-                String *delim = charToStr("&");
-                StringArray *innertoken = charToStrArr(token->string[i].str, delim);
+                String *innertrenner = charToStr("&");
+                StringArray *innertoken = charToStrArr(token->string[i].str, innertrenner);
                 for (int t = 0; t < innertoken->count; t++) {
                     if (sscanf(innertoken->string[t].str, "id=%s", &rawid) == 1) { //!! hier das problem nur die erste id wird genommen also wenn es id=hallo hallo hallo ist beinhaltet rawid danach nur hallo !!
                         PathElement *child = createPathElement("",token->string,token->count,NULL,0,parent);
@@ -91,7 +91,7 @@ int Filereader(char *file_path) {
             }
             fclose(file);
         }
-        else{
+    else{
             printf("File Not Found\n");
             Programm(file_path, sizeof(file_path));  //(char *file_path, size_t len) übergebung der size und
         }
