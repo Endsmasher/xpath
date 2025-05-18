@@ -30,43 +30,62 @@ void Programm(char *file_path, size_t len){
     printf("DateiPfad: %s\n", outertoken->string[0].str);
     strcpy(file_path, outertoken->string[0].str);
 
-    String *pathdelim = charToStr("/"); //!! ich würde hier einfach delim überschreiben anstelle einer neuen variable einzufügen !!
-    StringArray *token= charToStrArr(outertoken->string[1].str, pathdelim);
+    String *deliminner= charToStr("/"); //!! ich würde hier einfach delim überschreiben anstelle einer neuen variable einzufügen !!
+    StringArray *token= charToStrArr(outertoken->string[1].str, deliminner);
     PathElement *parent = createPathElement (token->string[0].str, NULL,0,NULL,0,NULL); //!! hier ist nur die parent zwingend null der rest ist nich umbedingt null !!
 
     for (int i = 1; i < token->count; i++) {
-        if (token->string[i].str) {
+        if (token->string[i].str) {        // prüfung ob token überhaupt da ist
+            if (strstr(token->string[i].str, "&") != NULL) {       // wenn ein token das symbol "&" enthält, dann soll token in der einzelne innertoken geteilt werden
+                String *delim = charToStr("&");
+                StringArray *innertoken = charToStrArr(token->string[i].str, delim);
+                for (int t = 0; t < innertoken->count; t++) {
+                    if (sscanf(innertoken->string[t].str, "id=%s", &rawid) == 1) { //!! hier das problem nur die erste id wird genommen also wenn es id=hallo hallo hallo ist beinhaltet rawid danach nur hallo !!
+                        PathElement *child = createPathElement("",token->string,token->count,NULL,0,parent);
+                    }else if (sscanf(innertoken->string[t].str, "class=%s", &class)) {
+                        //!! selbige hier !!
+                        PathElement *child = createPathElement("",NULL,0,token->string,token->count,child);
+                    }else {
+                        PathElement *childparent = createPathElement (token->string[t].str,NULL,0,NULL,0,parent);
+                        parent = childparent; //für verzweigungen des type/childparents
+                    }
+                }
+                freeStringArray(innertoken);
+                }
+            }
+// wenn oben nein dann :
             if (sscanf(token->string[i].str, "id=%s", &rawid) == 1) { //!! hier das problem nur die erste id wird genommen also wenn es id=hallo hallo hallo ist beinhaltet rawid danach nur hallo !!
-                createPathElement("",token->string,token->count,NULL,0,parent);
+                PathElement *child = createPathElement("",token->string,token->count,NULL,0,parent);
             }else if (sscanf(token->string[i].str, "class=%s", &class)) { //!! selbige hier !!
-                createPathElement("",NULL,0,token->string,token->count,parent);
-                //Wichtig: AKtuell nur 1 parent und alles Childrens am root, Warten auf joshi antwort
+                PathElement *child = createPathElement("",NULL,0,token->string,token->count,child);
                 /* Bin mir nicht ganz sicher was du meinst, aber hier müsste sich für jeden children der parent ändern, wenn du jedem children den selben parent gibt dann ist es keine linie nach unten sondern idk ein 1 parent zu 20
                  * du müsstest einmal eine variable haben die den allerersten parent abspeichert (den musst du später mir zum vergleichen dann geben)
                  * und eine parent variable die sich konstant ändert, also wenn es div/hallo/ballo ist ist div am anfang die parent, sobald hallo erstellt wurde wird hallo zum parent, selbiges mit ballo, identisch zu einer verketteten liste
                  */
             }else {
-                createPathElement (token->string[i].str,NULL,0,NULL,0,parent);
+                PathElement *childparent = createPathElement (token->string[i].str,NULL,0,NULL,0,parent);
+                parent = childparent;
             }
         }
-    }
+
 
     printPathElements(parent, 0); //Ab welchen lvl der Baum geprintet wird
     freeStringArray(outertoken);
     freeStringArray(token);
+
 }
 
 
 
+//            String *delim = charToStr("&");
+//            StringArray *innertoken = charToStrArr(token->string[i].str, delim);
 
 
-
-
-int Filereader (char *file_path){
-        FILE *file;
-        file = fopen(file_path, "r");
-        char buffer[1024];
-        if(file != NULL){
+int Filereader(char *file_path) {
+    FILE *file;
+    file = fopen(file_path, "r");
+    char buffer[1024];
+    if(file != NULL){
             while (fgets(buffer, sizeof(buffer), file) != NULL) {
                 printf("File opened: %s\n", buffer);
             }
