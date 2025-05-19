@@ -5,8 +5,7 @@
 typedef struct PathElement {
   char type[256];
 
-  String *id;
-  int id_count;
+  String id;
 
   String *class;
   int class_count;
@@ -23,7 +22,7 @@ typedef struct PathElement {
  * parent the parent object to properly connect the elements
  * RETURNS: a PathElement object with allocated memory
  */
-PathElement *createPathElement(const char *type, String id[], int id_count, String class[], int class_count, PathElement *parent);
+PathElement *createPathElement(const char *type, String id, String class[], int class_count, PathElement *parent);
 
 /*
  * unassigning memory from PathElements
