@@ -11,11 +11,8 @@
 // absolute path nötig aktuell
 
 
-void Programm(char *file_path, size_t len){
+void Programm(char *file_path, size_t len) {
     char eingabe[200];
-    char class[20];
-    char rawid[20];// noch ändern auf ohne limit
-
 
     // für denn file path
     printf("Programm start\n");
@@ -24,7 +21,7 @@ void Programm(char *file_path, size_t len){
     fgets(eingabe, sizeof(eingabe), stdin);       //fgets liest alles ein inklusive leerzeichen "C:\\datei.txt\n\0" durch enter taste kommt \n \0 \dazu ( "miau.txt div/div/id=2343/div\n\0" )
     eingabe[strcspn(eingabe, "\n")] = '\0';       // strcspn(eingabe, "\n") gibt in welcher position in buffer \n befindet und macht dann daraus ein \0 bsp: eingabe[12] = '\0';  an pos 12 war das \n
 
-    String *delim = charToStr(" ");
+    String *delim = charToStr("?");
     StringArray *outertoken = charToStrArr(eingabe, delim);
 
     printf("DateiPfad: %s\n", outertoken->string[0].str);
@@ -32,54 +29,65 @@ void Programm(char *file_path, size_t len){
 
     String *deliminner= charToStr("/"); //!! ich würde hier einfach delim überschreiben anstelle einer neuen variable einzufügen !!
     StringArray *token= charToStrArr(outertoken->string[1].str, deliminner);
-    PathElement *parent = createPathElement (token->string[0].str, NULL,0,NULL,0,NULL); //!! hier ist nur die parent zwingend null der rest ist nich umbedingt null !!
+    PathElement *parent; //inizialisierung von parent für root uns co
+    for (int i = 0; i < token->count; i++) {
 
-    for (int i = 1; i < token->count; i++) {
-        if (token->string[i].str) {        // prüfung ob token überhaupt da ist
-            if (strstr(token->string[i].str, "&") != NULL) {       // wenn ein token das symbol "&" enthält, dann soll token in der einzelne innertoken geteilt werden
+        while (i == 0) { //für das erste/ Root und auch speichernd
+            if (strstr(token->string[i].str, "&") != NULL) {// wenn ein token das symbol "&" enthält, dann soll token in der einzelne innertoken geteilt werden
+
                 String *innertrenner = charToStr("&");
                 StringArray *innertoken = charToStrArr(token->string[i].str, innertrenner);
-                for (int t = 0; t < innertoken->count; t++) {
-                    if (sscanf(innertoken->string[t].str, "id=%s", &rawid) == 1) { //!! hier das problem nur die erste id wird genommen also wenn es id=hallo hallo hallo ist beinhaltet rawid danach nur hallo !!
-                        PathElement *child = createPathElement("",token->string,token->count,NULL,0,parent);
-                    }else if (sscanf(innertoken->string[t].str, "class=%s", &class)) {
-                        //!! selbige hier !!
-                        PathElement *child = createPathElement("",NULL,0,token->string,token->count,child);
-                    }else {
-                        PathElement *childparent = createPathElement (token->string[t].str,NULL,0,NULL,0,parent);
-                        parent = childparent; //für verzweigungen des type/childparents
-                    }
-                }
+
+                String *idtrenner = charToStr("id=");
+                StringArray *rawid = charToStrArr(innertoken->string[1].str, idtrenner);    // nimmt das "Id=" aus dem 2 teil des innertoken also "div id=2323 clas=Auto Auto" == 2323 und speicher in rawid adresse
+
+                String *classtrenner = charToStr("class=");
+                StringArray *rawclasses = charToStrArr(innertoken->string[2].str, classtrenner);
+
+                PathElement *root = createPathElement (innertoken->string[0].str, rawid->string,rawid->count,rawclasses->string,rawclasses->count,parent);
+                parent = root;
+
+                freeStringArray(rawclasses);
+                freeStringArray(rawid);
                 freeStringArray(innertoken);
-                }
+            }else {
+                PathElement *root = createPathElement (token->string[0].str, NULL,0,NULL,0,NULL);
+                parent = root;
             }
-// wenn oben nein dann :
-            if (sscanf(token->string[i].str, "id=%s", &rawid) == 1) { //!! hier das problem nur die erste id wird genommen also wenn es id=hallo hallo hallo ist beinhaltet rawid danach nur hallo !!
-                PathElement *child = createPathElement("",token->string,token->count,NULL,0,parent);
-            }else if (sscanf(token->string[i].str, "class=%s", &class)) { //!! selbige hier !!
-                PathElement *child = createPathElement("",NULL,0,token->string,token->count,child);
-                /* Bin mir nicht ganz sicher was du meinst, aber hier müsste sich für jeden children der parent ändern, wenn du jedem children den selben parent gibt dann ist es keine linie nach unten sondern idk ein 1 parent zu 20
-                 * du müsstest einmal eine variable haben die den allerersten parent abspeichert (den musst du später mir zum vergleichen dann geben)
-                 * und eine parent variable die sich konstant ändert, also wenn es div/hallo/ballo ist ist div am anfang die parent, sobald hallo erstellt wurde wird hallo zum parent, selbiges mit ballo, identisch zu einer verketteten liste
-                 */
+            i++;
+        }
+        if (token->string[i].str) {        // prüfung ob token überhaupt da ist
+            if (strstr(token->string[i].str, "&") != NULL) {// wenn ein token das symbol "&" enthält, dann soll token in der einzelne innertoken geteilt werden
+
+                String *innertrenner = charToStr("&");
+                StringArray *innertoken = charToStrArr(token->string[i].str, innertrenner);
+
+                String *idtrenner = charToStr("id=");
+                StringArray *rawid = charToStrArr(innertoken->string[1].str, idtrenner);    // nimmt das "Id=" aus dem 2 teil des innertoken also "div id=2323 clas=Auto Auto" == 2323 und speicher in rawid adresse
+
+                String *classtrenner = charToStr("class=");
+                StringArray *rawclasses = charToStrArr(innertoken->string[2].str, classtrenner);
+
+                PathElement *childparent = createPathElement (innertoken->string[0].str, rawid->string,rawid->count,rawclasses->string,rawclasses->count,parent);
+                parent = childparent;
+
+                freeStringArray(rawclasses);
+                freeStringArray(rawid);
+                freeStringArray(innertoken);
             }else {
                 PathElement *childparent = createPathElement (token->string[i].str,NULL,0,NULL,0,parent);
-                parent = childparent;
+                parent = childparent; //für verzweigungen des type/childparent
+
             }
+
         }
-
-
-    printPathElements(parent, 0); //Ab welchen lvl der Baum geprintet wird
-    freeStringArray(outertoken);
+    }
     freeStringArray(token);
-
+    printPathElements(parent, 0); //Ab welchen lvl der Baum geprintet wird // Muss root sein but dawg zu müde
 }
-
-
 
 //            String *delim = charToStr("&");
 //            StringArray *innertoken = charToStrArr(token->string[i].str, delim);
-
 
 int Filereader(char *file_path) {
     FILE *file;
