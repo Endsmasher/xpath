@@ -1,17 +1,18 @@
+#define _GNU_SOURCE
 #include "path_element.h"
 #include <stdio.h>
 
 PathElement *createPathElement(const char *type, String id, String class[], const int class_count, PathElement *parent) {
   PathElement *element = malloc(sizeof(PathElement));
 
-  strcpy_s(element->type.str, sizeof(element->type) + 1, type);
-  strcpy_s(element->id.str, sizeof(element->id) + 1, id.str);
+  strncpy(element->type.str, type, sizeof(element->type) + 1);
+  strncpy(element->id.str, id.str, sizeof(element->id) + 1);
 
   element->class_count = class_count;
   element->class = malloc(sizeof(String) * class_count);
 
   for (int i = 0; i < class_count; i++) {
-    element->class[i].str = _strdup(class[i].str);
+    element->class[i].str = strdup(class[i].str);
   }
 
   parent->children = realloc(parent->children, sizeof(PathElement *) * (parent->children_count + 1));

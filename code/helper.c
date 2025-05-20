@@ -16,7 +16,7 @@ String *charToStr(char *s) {
     return NULL;
   }
 
-  strcpy_s(result->str, strlen(s), s);
+  strncpy(result->str, s,  strlen(s));
 
   return result;
 }
@@ -24,10 +24,9 @@ String *charToStr(char *s) {
 StringArray *charToStrArr(char *args, String *delim) {
   if (args == NULL) return NULL;
 
-  char *args_copy = _strdup(args);
+  char *args_copy = strdup(args);
   if (!args_copy) return NULL;
 
-  char *context = NULL;
   StringArray *result = malloc(sizeof(StringArray));
 
   if (!result) {
@@ -38,7 +37,7 @@ StringArray *charToStrArr(char *args, String *delim) {
   result->string = NULL;
   result->count = 0;
 
-  const char *token = strtok_s(args, delim->str, &context);
+  const char *token = strtok(args, delim->str);
   int i = 0;
 
   while (token != NULL) {
@@ -49,7 +48,7 @@ StringArray *charToStrArr(char *args, String *delim) {
       return NULL;
     }
 
-    result->string[i].str = _strdup(token);
+    result->string[i].str = strdup(token);
     if (!result->string[i].str) {
       freeStringArray(result);
       free(args_copy);
@@ -59,7 +58,7 @@ StringArray *charToStrArr(char *args, String *delim) {
     i+=1;
     result->count = i;
 
-    token = strtok_s(NULL, delim->str, &context);
+    token = strtok(NULL, delim->str);
   }
   free(args_copy);
 
