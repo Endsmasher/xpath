@@ -4,7 +4,7 @@
 PathElement *createPathElement(const char *type, String id, String class[], const int class_count, PathElement *parent) {
   PathElement *element = malloc(sizeof(PathElement));
 
-  strcpy_s(element->type, sizeof(element->type) + 1, type);
+  strcpy_s(element->type.str, sizeof(element->type) + 1, type);
   strcpy_s(element->id.str, sizeof(element->id) + 1, id.str);
 
   element->class_count = class_count;

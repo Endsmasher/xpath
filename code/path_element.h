@@ -3,7 +3,7 @@
 #define PATH_ELEMENT_H
 
 typedef struct PathElement {
-  char type[256];
+  String type;
 
   String id;
 
