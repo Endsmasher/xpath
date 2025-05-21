@@ -10,7 +10,7 @@
 
 // ./Programm "C:\Users\herbi\CLionProjects\xpath\html\test.txt div/div/div/price/id=223221/Auto"
 // absolute path nötig aktuell
-
+// test.txt?div/div/div&id=343234&class=auto auto moew/div
 
 void Programm(char *file_path, size_t len) {
     char eingabe[500];
