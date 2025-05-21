@@ -32,7 +32,7 @@ void Programm(char *file_path, size_t len) {
     PathElement *parent; //inizialisierung von parent für root uns co
     for (int i = 0; i < token->count; i++) {
 
-        while (i == 0) { //für das erste/ Root und auch speichernd
+        if (i == 0) { //für das erste/ Root und auch speichernd
             if (strstr(token->string[i].str, "&") != NULL) {// wenn ein token das symbol "&" enthält, dann soll token in der einzelne innertoken geteilt werden
 
                 String *innertrenner = charToStr("&");
@@ -44,14 +44,14 @@ void Programm(char *file_path, size_t len) {
                 String *classtrenner = charToStr("class=");
                 StringArray *rawclasses = charToStrArr(innertoken->string[2].str, classtrenner);
 
-                PathElement *root = createPathElement (innertoken->string[0].str, rawid->string,rawid->count,rawclasses->string,rawclasses->count,parent);
+                PathElement *root = createPathElement (innertoken->string[0].str, rawid->string[0],rawclasses->string,rawclasses->count,parent);
                 parent = root;
 
                 freeStringArray(rawclasses);
                 freeStringArray(rawid);
                 freeStringArray(innertoken);
             }else {
-                PathElement *root = createPathElement (token->string[0].str, NULL,0,NULL,0,NULL);
+                PathElement *root = createPathElement (token->string[0].str,(String){ .str = NULL },NULL,0,NULL);
                 parent = root;
             }
             i++;
@@ -68,14 +68,14 @@ void Programm(char *file_path, size_t len) {
                 String *classtrenner = charToStr("class=");
                 StringArray *rawclasses = charToStrArr(innertoken->string[2].str, classtrenner);
 
-                PathElement *childparent = createPathElement (innertoken->string[0].str, rawid->string,rawid->count,rawclasses->string,rawclasses->count,parent);
+                PathElement *childparent = createPathElement (innertoken->string[0].str, rawid->string[0],rawclasses->string,rawclasses->count,parent);
                 parent = childparent;
 
                 freeStringArray(rawclasses);
                 freeStringArray(rawid);
                 freeStringArray(innertoken);
             }else {
-                PathElement *childparent = createPathElement (token->string[i].str,NULL,0,NULL,0,parent);
+                PathElement *childparent = createPathElement (token->string[i].str,(String){ .str = NULL },NULL,0,parent);  // id wird leerem wert übergeben
                 parent = childparent; //für verzweigungen des type/childparent
 
             }
