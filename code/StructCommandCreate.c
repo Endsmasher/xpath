@@ -1,6 +1,7 @@
 //
 // Created by herbi on 15.05.2025.
 //
+#include <stdbool.h>
 #include <stdio.h>
 #include "helper.h"
 #include "path_element.h"
@@ -29,7 +30,8 @@ void Programm(char *file_path, size_t len) {
 
     String *deliminner= charToStr("/"); //!! ich würde hier einfach delim überschreiben anstelle einer neuen variable einzufügen !!
     StringArray *token= charToStrArr(outertoken->string[1].str, deliminner);
-    PathElement *parent; //inizialisierung von parent für root uns co
+    PathElement *root = NULL;
+    PathElement *parent = root;
     for (int i = 0; i < token->count; i++) {
 
         if (i == 0) { //für das erste/ Root und auch speichernd
@@ -43,15 +45,14 @@ void Programm(char *file_path, size_t len) {
 
                 String *classtrenner = charToStr("class=");
                 StringArray *rawclasses = charToStrArr(innertoken->string[2].str, classtrenner);
-
-                PathElement *root = createPathElement (innertoken->string[0].str, rawid->string[0],rawclasses->string,rawclasses->count,parent);
+                root = createPathElement (innertoken->string[0].str, rawid->string[0],rawclasses->string,rawclasses->count, NULL);
                 parent = root;
 
                 freeStringArray(rawclasses);
                 freeStringArray(rawid);
                 freeStringArray(innertoken);
             }else {
-                PathElement *root = createPathElement (token->string[0].str,(String){ .str = NULL },NULL,0,NULL);
+                root = createPathElement (token->string[0].str,(String){ .str = NULL },NULL,0,NULL);
                 parent = root;
             }
             i++;
@@ -68,22 +69,18 @@ void Programm(char *file_path, size_t len) {
                 String *classtrenner = charToStr("class=");
                 StringArray *rawclasses = charToStrArr(innertoken->string[2].str, classtrenner);
 
-                PathElement *childparent = createPathElement (innertoken->string[0].str, rawid->string[0],rawclasses->string,rawclasses->count,parent);
-                parent = childparent;
+                parent = createPathElement (innertoken->string[0].str, rawid->string[0],rawclasses->string,rawclasses->count,parent);
 
                 freeStringArray(rawclasses);
                 freeStringArray(rawid);
                 freeStringArray(innertoken);
             }else {
-                PathElement *childparent = createPathElement (token->string[i].str,(String){ .str = NULL },NULL,0,parent);  // id wird leerem wert übergeben
-                parent = childparent; //für verzweigungen des type/childparent
-
+                parent = createPathElement (token->string[i].str,(String){ .str = NULL },NULL,0,parent);  // id wird leerem wert übergeben
             }
-
         }
     }
     freeStringArray(token);
-    printPathElements(parent, 0); //Ab welchen lvl der Baum geprintet wird // Muss root sein but dawg zu müde
+    printPathElements(root, 0);
 }
 
 //            String *delim = charToStr("&");
@@ -106,17 +103,9 @@ int Filereader(char *file_path) {
         return 0;
 }
 int main() {
-    char file_path[200];
-    Programm(file_path, sizeof(file_path));
-    Filereader(file_path);
-    return 0;
+    while (true) {
+        char file_path[200];
+        Programm(file_path, sizeof(file_path));
+        return 0;
+    }
 }
-
-
-//String *test = charToStr(eingabe);
-
-//String *delim = charToStr(",");
-
-//StringArray *test2 = charToStrArr(eingabe, delim);
-
-//PathElement *test3 = CreatePathElement("", test2->string, test2->count, NULL, 0, NULL);
