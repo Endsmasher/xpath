@@ -16,29 +16,28 @@ String *charToStr(char *s) {
     return NULL;
   }
 
-  strcpy_s(result->str, strlen(s), s);
+  strncpy(result->str, s,  strlen(s));
 
   return result;
 }
 
 StringArray *charToStrArr(char *args, String *delim) {
-  if (args == NULL) return NULL;                            // wenn args / eingabe = nichts ist wird NULL ausgegeben
+  if (args == NULL) return NULL;
 
-  char *args_copy = _strdup(args);
-  if (!args_copy) return NULL;                              //NULL wenn adresse args_copy kein string bekommen hat von args
+  char *args_copy = strdup(args);
+  if (!args_copy) return NULL;
 
-  char *context = NULL;
-  StringArray *result = malloc(sizeof(StringArray));    //reserviert ein heap speicher adresse malloc....größe byte stringarray  in pointer result
+  StringArray *result = malloc(sizeof(StringArray));
 
-  if (!result) { //result == NULL
+  if (!result) {
     free(args_copy);
-    return NULL;      //bricht die funktion ab
+    return NULL;
   }
 
   result->string = NULL;
   result->count = 0;
 
-  const char *token = strtok_s(args, delim->str, &context);
+  const char *token = strtok(args, delim->str);
   int i = 0;
 
   while (token != NULL) {
@@ -49,7 +48,7 @@ StringArray *charToStrArr(char *args, String *delim) {
       return NULL;
     }
 
-    result->string[i].str = _strdup(token);
+    result->string[i].str = strdup(token);
     if (!result->string[i].str) {
       freeStringArray(result);
       free(args_copy);
@@ -59,7 +58,7 @@ StringArray *charToStrArr(char *args, String *delim) {
     i+=1;
     result->count = i;
 
-    token = strtok_s(NULL, delim->str, &context);
+    token = strtok(NULL, delim->str);
   }
   free(args_copy);
 
