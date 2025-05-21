@@ -13,14 +13,15 @@
 
 
 void Programm(char *file_path, size_t len) {
-    char eingabe[200];
+    char eingabe[500];
 
     // für denn file path
     printf("Programm start\n");
-    printf("Bitte Zuerst denn dateipfad und dann denn path. Mit leerzeichen trennen: ");
+    printf("Bitte Zuerst denn dateipfad und dann denn path. Mit leerzeichen trennen: \n");
 
     fgets(eingabe, sizeof(eingabe), stdin);       //fgets liest alles ein inklusive leerzeichen "C:\\datei.txt\n\0" durch enter taste kommt \n \0 \dazu ( "miau.txt div/div/id=2343/div\n\0" )
-    eingabe[strcspn(eingabe, "\n")] = '\0';       // strcspn(eingabe, "\n") gibt in welcher position in buffer \n befindet und macht dann daraus ein \0 bsp: eingabe[12] = '\0';  an pos 12 war das \n
+    eingabe[strcspn(eingabe, "\r\n")] = '\0';       // strcspn(eingabe, "\n") gibt in welcher position in buffer \n befindet und macht dann daraus ein \0 bsp: eingabe[12] = '\0';  an pos 12 war das \n
+    printf("Eingabe: [%s]\n", eingabe);
 
     String *delim = charToStr("?");
     StringArray *outertoken = charToStrArr(eingabe, delim);
