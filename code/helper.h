@@ -4,7 +4,6 @@
 #pragma once
 #include <stdlib.h>
 #include <string.h>
-#define HELPER_H
 
 typedef struct String {
   char *str;

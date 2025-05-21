@@ -1,6 +1,5 @@
 #pragma once
 #include "helper.h"
-#define PATH_ELEMENT_H
 
 typedef struct PathElement {
   String type;
