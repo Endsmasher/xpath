@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "helper.h"
 #include "path_element.h"
+#include "headargp.h"
 //#include <filepath_provider.h>
 
 
@@ -12,27 +13,17 @@
 // absolute path nötig aktuell
 // test.txt?div/div/div&id=343234&class=auto auto moew/div
 
-void Programm(char *file_path, size_t len) {
-    char eingabe[500];
+void Programm(char *file_path, char *path) {
 
     // für denn file path
-    printf("Programm start\n");
-    printf("Bitte Zuerst denn dateipfad und dann denn path. Mit leerzeichen trennen: \n");
-
-    fgets(eingabe, sizeof(eingabe), stdin);       //fgets liest alles ein inklusive leerzeichen "C:\\datei.txt\n\0" durch enter taste kommt \n \0 \dazu ( "miau.txt div/div/id=2343/div\n\0" )
-    eingabe[strcspn(eingabe, "\r\n")] = '\0';       // strcspn(eingabe, "\n") gibt in welcher position in buffer \n befindet und macht dann daraus ein \0 bsp: eingabe[12] = '\0';  an pos 12 war das \n
-    printf("Eingabe: [%s]\n", eingabe);
-
-    String *delim = charToStr("?");
-    StringArray *outertoken = charToStrArr(eingabe, delim);
-
-    printf("DateiPfad: %s\n", outertoken->string[0].str);
-    strcpy(file_path, outertoken->string[0].str);
+    printf("DateiPfad: %s\n", file_path);
 
     String *deliminner= charToStr("/"); //!! ich würde hier einfach delim überschreiben anstelle einer neuen variable einzufügen !!
-    StringArray *token= charToStrArr(outertoken->string[1].str, deliminner);
+    StringArray *token= charToStrArr(path, deliminner);
+
     PathElement *root = NULL;
     PathElement *parent = root;
+
     for (int i = 0; i < token->count; i++) {
 
         if (i == 0) { //für das erste/ Root und auch speichernd
@@ -82,31 +73,30 @@ void Programm(char *file_path, size_t len) {
     }
     freeStringArray(token);
     printPathElements(root, 0);
+
 }
 
 //            String *delim = charToStr("&");
 //            StringArray *innertoken = charToStrArr(token->string[i].str, delim);
 
-int Filereader(char *file_path) {
-    FILE *file;
-    file = fopen(file_path, "r");
-    char buffer[1024];
-    if(file != NULL){
-            while (fgets(buffer, sizeof(buffer), file) != NULL) {
-                printf("File opened: %s\n", buffer);
-            }
-            fclose(file);
-        }
-    else{
-            printf("File Not Found\n");
-            Programm(file_path, sizeof(file_path));  //(char *file_path, size_t len) übergebung der size und
-        }
-        return 0;
-}
-int main() {
-    while (true) {
-        char file_path[200];
-        Programm(file_path, sizeof(file_path));
-        return 0;
+int Filereader(const char *file_path) {
+    FILE *file = fopen(file_path, "r");
+    if (!file) {
+        fprintf(stderr, "Fehler: Datei '%s' nicht gefunden\n", file_path);
+        return -1;
     }
+    char buffer[1024];
+    while (fgets(buffer, sizeof(buffer), file)) {
+        printf(">> %s", buffer);
+    }
+    fclose(file);
+    return 0;
+}
+
+int main(int argc, char **argv) {
+    if (parse_cmdline(argc, argv) != 0)   // ungültige eingaben prüfen // in die globale Struktur arguments
+        return 1;
+    Programm(arguments.file_path, arguments.path);
+	Filereader(arguments.file_path);
+    return 0;
 }
